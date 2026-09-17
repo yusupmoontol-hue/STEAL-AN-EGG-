@@ -18,7 +18,6 @@ local function runUsernameVerification()
    verifyGui.IgnoreGuiInset = true
    verifyGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
 
-   -- Layar Penuh Hitam Gelap
    local darkBg = Instance.new("Frame")
    darkBg.Size = UDim2.new(1, 0, 1, 0)
    darkBg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -26,11 +25,10 @@ local function runUsernameVerification()
    darkBg.BorderSizePixel = 0
    darkBg.Parent = verifyGui
 
-   -- Kotak Verifikasi Username
    local verifyBox = Instance.new("Frame")
    verifyBox.Size = UDim2.new(0, 380, 0, 230)
    verifyBox.Position = UDim2.new(0.5, -190, 0.5, -115)
-   verifyBox.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+   verifyBox.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
    verifyBox.BorderSizePixel = 0
    verifyBox.Parent = verifyGui
 
@@ -43,7 +41,7 @@ local function runUsernameVerification()
    titleLbl.Position = UDim2.new(0, 0, 0, 12)
    titleLbl.BackgroundTransparency = 1
    titleLbl.Text = "👑 CHOCOLA HUB - VERIFIKASI 👑"
-   titleLbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+   titleLbl.TextColor3 = Color3.fromRGB(218, 112, 214) -- Ungu Terang (Orchid)
    titleLbl.TextScaled = true
    titleLbl.Font = Enum.Font.SourceSansBold
    titleLbl.Parent = verifyBox
@@ -59,14 +57,13 @@ local function runUsernameVerification()
    descLbl.TextWrapped = true
    descLbl.Parent = verifyBox
 
-   -- Kotak Input Text Username
    local textBox = Instance.new("TextBox")
    textBox.Size = UDim2.new(0, 320, 0, 40)
    textBox.Position = UDim2.new(0.5, -160, 0, 110)
-   textBox.BackgroundColor3 = Color3.fromRGB(25, 35, 50)
+   textBox.BackgroundColor3 = Color3.fromRGB(35, 25, 50)
    textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
    textBox.PlaceholderText = "Ketik username asli (bukan display)..."
-   textBox.PlaceholderColor3 = Color3.fromRGB(120, 140, 170)
+   textBox.PlaceholderColor3 = Color3.fromRGB(160, 130, 190)
    textBox.Text = ""
    textBox.TextSize = 15
    textBox.Font = Enum.Font.SourceSansBold
@@ -77,11 +74,10 @@ local function runUsernameVerification()
    txtCorner.CornerRadius = UDim.new(0, 8)
    txtCorner.Parent = textBox
 
-   -- Tombol Submit / Masuk
    local submitBtn = Instance.new("TextButton")
    submitBtn.Size = UDim2.new(0, 320, 0, 40)
    submitBtn.Position = UDim2.new(0.5, -160, 0, 165)
-   submitBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+   submitBtn.BackgroundColor3 = Color3.fromRGB(138, 43, 226) -- Warna Ungu (BlueViolet)
    submitBtn.Text = "VERIFIKASI"
    submitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
    submitBtn.TextSize = 16
@@ -96,7 +92,6 @@ local function runUsernameVerification()
 
    submitBtn.MouseButton1Click:Connect(function()
       local enteredName = textBox.Text
-      -- Cek apakah username yang dimasukkan sesuai dengan LocalPlayer.Name
       if string.lower(enteredName) == string.lower(LocalPlayer.Name) then
          verified = true
          submitBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
@@ -108,7 +103,7 @@ local function runUsernameVerification()
          submitBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
          submitBtn.Text = "Username Salah! Gunakan Username Asli"
          task.wait(1)
-         submitBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+         submitBtn.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
          submitBtn.Text = "VERIFIKASI"
       end
    end)
@@ -118,7 +113,6 @@ local function runUsernameVerification()
    end
 end
 
--- Jalankan verifikasi username di awal eksekusi
 runUsernameVerification()
 
 -- ==========================================
@@ -168,7 +162,7 @@ pcall(function()
 end)
 
 -- ==========================================
--- SETUP DATABASE RATING BINTANG (AUTO RESET 1 JAM)
+-- SETUP DATABASE RATING BINTANG
 -- ==========================================
 local ratingDatabasePath = "ChocolaHub/ScriptRatingDatabase.json"
 
@@ -223,7 +217,7 @@ local function showRatingPopup()
 
    local rateBg = Instance.new("Frame")
    rateBg.Size = UDim2.new(1, 0, 1, 0)
-   rateBg.BackgroundColor3 = Color3.fromRGB(10, 25, 45)
+   rateBg.BackgroundColor3 = Color3.fromRGB(20, 10, 35)
    rateBg.BackgroundTransparency = 0.2
    rateBg.BorderSizePixel = 0
    rateBg.Parent = rateGui
@@ -231,7 +225,7 @@ local function showRatingPopup()
    local rateBox = Instance.new("Frame")
    rateBox.Size = UDim2.new(0, 420, 0, 260)
    rateBox.Position = UDim2.new(0.5, -210, 0.5, -130)
-   rateBox.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+   rateBox.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
    rateBox.BorderSizePixel = 0
    rateBox.Parent = rateGui
 
@@ -244,7 +238,7 @@ local function showRatingPopup()
    rateTitle.Position = UDim2.new(0, 0, 0, 12)
    rateTitle.BackgroundTransparency = 1
    rateTitle.Text = "⭐ RATE SCRIPT CHOCOLA HUB (1-100) ⭐"
-   rateTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+   rateTitle.TextColor3 = Color3.fromRGB(218, 112, 214)
    rateTitle.TextScaled = true
    rateTitle.Font = Enum.Font.SourceSansBold
    rateTitle.Parent = rateBox
@@ -277,9 +271,9 @@ local function showRatingPopup()
    for i = 1, 10 do
       local starCountValue = i * 10
       local starBtn = Instance.new("TextButton")
-      starBtn.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+      starBtn.BackgroundColor3 = Color3.fromRGB(50, 30, 80)
       starBtn.Text = starCountValue .. " ⭐"
-      starBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+      starBtn.TextColor3 = Color3.fromRGB(218, 112, 214)
       starBtn.TextScaled = true
       starBtn.Font = Enum.Font.SourceSansBold
       starBtn.Parent = starButtonsContainer
@@ -307,7 +301,7 @@ local function showRatingPopup()
    skipBtn.Position = UDim2.new(0.5, -100, 0, 220)
    skipBtn.BackgroundTransparency = 1
    skipBtn.Text = "Lewati / Nanti Saja"
-   skipBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+   skipBtn.TextColor3 = Color3.fromRGB(170, 150, 200)
    skipBtn.TextScaled = true
    skipBtn.Font = Enum.Font.SourceSans
    skipBtn.Parent = rateBox
@@ -318,7 +312,7 @@ local function showRatingPopup()
 end
 
 -- ==========================================
--- VALIDASI KEPEMILIKAN KEY (ANTI SHARE KEY)
+-- VALIDASI KEPEMILIKAN KEY
 -- ==========================================
 pcall(function()
    local rayFilePath = "ChocolaHub/ChocolaKeySystem.json"
@@ -374,7 +368,7 @@ pcall(function()
 end)
 
 -- ==========================================
--- SETUP DETEKSI STATUS & WAKTU KEY DI AWAL
+-- SETUP STATUS & WAKTU KEY
 -- ==========================================
 local activeKeyType = "MEMBER"
 local expireTimestamp = 0
@@ -427,7 +421,6 @@ pcall(function()
    end
 end)
 
--- Variabel Global untuk Custom Title Kepala
 local customHeadTitleText = "👑 @ysuff_store 👑"
 
 local function updateHeadTitle()
@@ -472,7 +465,7 @@ if LocalPlayer.Character then
 end
 
 -- ==========================================
--- FITUR FPS COUNTER, JAM HP & LIVE TIMER
+-- FITUR FPS COUNTER, JAM HP & LIVE TIMER (Warna Ungu Terang)
 -- ==========================================
 local function createFPSCounter()
    local screenGui = Instance.new("ScreenGui")
@@ -484,10 +477,9 @@ local function createFPSCounter()
    fpsLabel.Name = "FPSLabel"
    fpsLabel.Size = UDim2.new(0, 210, 0, 95)
    fpsLabel.Position = UDim2.new(0, 15, 0, 15)
-   fpsLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+   fpsLabel.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
    fpsLabel.BackgroundTransparency = 0.4
-   -- Warna teks diubah menjadi Kuning Tebal (Gold) sesuai permintaan sebelumnya
-   fpsLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+   fpsLabel.TextColor3 = Color3.fromRGB(221, 160, 221) -- Warna Plum / Ungu Lembut
    fpsLabel.TextScaled = true
    fpsLabel.Font = Enum.Font.SourceSansBold
    fpsLabel.Text = "Jam: 00:00:00\nFPS: 0\nStatus: " .. activeKeyType .. "\nWaktu: Memuat..."
@@ -541,7 +533,7 @@ end
 pcall(createFPSCounter)
 
 -- ==========================================
--- SETUP RESET REMOTE & TARGETED RESET EVENT
+-- SETUP RESET REMOTE
 -- ==========================================
 local resetEventName = "ChocolaKeyResetRemote_v1"
 local resetRemote = ReplicatedStorage:FindFirstChild(resetEventName)
@@ -576,4 +568,11 @@ if not isOwner then
                shouldReset = true
             elseif targetType == "FREE" and (activeKey == "GOODMODE1" or activeKeyType == "FREE") then
                shouldReset = true
-    
+            elseif targetType == "VIP" and (activeKey == "VIPBUYHILO" or activeKeyType == "VIP") then
+               shouldReset = true
+            elseif targetType == "PERMANEN" and (activeKey == "UPDATEYSUFF" or activeKeyType == "PERMANEN") then
+               shouldReset = true
+            end
+
+            if shouldReset then
+           
