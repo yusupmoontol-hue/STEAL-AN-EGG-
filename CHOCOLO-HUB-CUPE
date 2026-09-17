@@ -1,5 +1,5 @@
--- PERINGATAN!!
--- JANGAN DI SEBAR SCRIPT NYA ATAU DI KUNCI SCRIPT!!👑
+PERINGATAN!!
+JANGAN DI SEBAR SCRIPT NYA ATAU DI KUNCI SCRIPT!!👑
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -10,10 +10,10 @@ local LocalPlayer = Players.LocalPlayer
 local OwnerUsername = "kakir79"
 local isOwner = (LocalPlayer.Name == OwnerUsername)
 
--- ==========================================
--- DATABASE WHITELIST (DIKELOLA PEMILIK/OWNER)
--- ==========================================
--- Daftar Username yang diizinkan menggunakan key VIP / Permanen
+==========================================
+DATABASE WHITELIST (DIKELOLA PEMILIK/OWNER)
+==========================================
+Daftar Username yang diizinkan menggunakan key VIP / Permanen
 local VIPBuyers = {}
 local PermanentBuyers = {}
 
@@ -171,9 +171,9 @@ end
 
 runKeySystem()
 
--- ==========================================
--- FITUR SMARTPHONE KECIL (YSUFF AI CHAT)
--- ==========================================
+==========================================
+FITUR SMARTPHONE KECIL (YSUFF AI CHAT)
+==========================================
 local function createPhoneAIChat()
    local phoneGui = Instance.new("ScreenGui")
    phoneGui.Name = "YsuffPhoneAIGui"
@@ -346,9 +346,9 @@ end
 
 pcall(createPhoneAIChat)
 
--- ==========================================
--- SETUP CUSTOM HEAD TITLE
--- ==========================================
+==========================================
+SETUP CUSTOM HEAD TITLE
+==========================================
 local customHeadTitleText = "👑 @ysuff_store (OWNER) 👑"
 
 local function updateHeadTitle()
@@ -392,9 +392,9 @@ if LocalPlayer.Character then
    task.spawn(updateHeadTitle)
 end
 
--- ==========================================
--- FITUR FPS COUNTER & JAM HP
--- ==========================================
+==========================================
+FITUR FPS COUNTER & JAM HP
+==========================================
 local function createFPSCounter()
    local screenGui = Instance.new("ScreenGui")
    screenGui.Name = "ChocolaFPSCounter"
@@ -468,9 +468,9 @@ end
 
 local SettingsTab = Window:CreateTab("Settings & Anti Lag", 4483362458)
 
--- ==========================================
--- MENU PANEL KHUSUS OWNER
--- ==========================================
+==========================================
+MENU PANEL KHUSUS OWNER
+==========================================
 if isOwner and OwnerTab then
    OwnerTab:CreateSection("👑 KONTROL UTAMA SUPREME OWNER")
    OwnerTab:CreateLabel("Halo, " .. LocalPlayer.Name .. "! Anda memiliki akses absolut.")
