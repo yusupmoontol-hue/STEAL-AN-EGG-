@@ -9,6 +9,119 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 -- ==========================================
+-- SETUP LAYAR HITAM & VERIFIKASI USERNAME PEMAIN
+-- ==========================================
+local function runUsernameVerification()
+   local verifyGui = Instance.new("ScreenGui")
+   verifyGui.Name = "ChocolaUsernameVerifyGui"
+   verifyGui.ResetOnSpawn = false
+   verifyGui.IgnoreGuiInset = true
+   verifyGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+
+   -- Layar Penuh Hitam Gelap
+   local darkBg = Instance.new("Frame")
+   darkBg.Size = UDim2.new(1, 0, 1, 0)
+   darkBg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+   darkBg.BackgroundTransparency = 0.05
+   darkBg.BorderSizePixel = 0
+   darkBg.Parent = verifyGui
+
+   -- Kotak Verifikasi Username
+   local verifyBox = Instance.new("Frame")
+   verifyBox.Size = UDim2.new(0, 380, 0, 230)
+   verifyBox.Position = UDim2.new(0.5, -190, 0.5, -115)
+   verifyBox.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+   verifyBox.BorderSizePixel = 0
+   verifyBox.Parent = verifyGui
+
+   local boxCorner = Instance.new("UICorner")
+   boxCorner.CornerRadius = UDim.new(0, 12)
+   boxCorner.Parent = verifyBox
+
+   local titleLbl = Instance.new("TextLabel")
+   titleLbl.Size = UDim2.new(1, 0, 0, 35)
+   titleLbl.Position = UDim2.new(0, 0, 0, 12)
+   titleLbl.BackgroundTransparency = 1
+   titleLbl.Text = "👑 CHOCOLA HUB - VERIFIKASI 👑"
+   titleLbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+   titleLbl.TextScaled = true
+   titleLbl.Font = Enum.Font.SourceSansBold
+   titleLbl.Parent = verifyBox
+
+   local descLbl = Instance.new("TextLabel")
+   descLbl.Size = UDim2.new(1, -30, 0, 50)
+   descLbl.Position = UDim2.new(0, 15, 0, 50)
+   descLbl.BackgroundTransparency = 1
+   descLbl.Text = "WELCOME GUSY\nTARO USERNAME KALIAN AGAR BISA VERIVIKASI JANG USERNAME DISPLAY!!🎉👇"
+   descLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+   descLbl.TextScaled = true
+   descLbl.Font = Enum.Font.SourceSansBold
+   descLbl.TextWrapped = true
+   descLbl.Parent = verifyBox
+
+   -- Kotak Input Text Username
+   local textBox = Instance.new("TextBox")
+   textBox.Size = UDim2.new(0, 320, 0, 40)
+   textBox.Position = UDim2.new(0.5, -160, 0, 110)
+   textBox.BackgroundColor3 = Color3.fromRGB(25, 35, 50)
+   textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+   textBox.PlaceholderText = "Ketik username asli (bukan display)..."
+   textBox.PlaceholderColor3 = Color3.fromRGB(120, 140, 170)
+   textBox.Text = ""
+   textBox.TextSize = 15
+   textBox.Font = Enum.Font.SourceSansBold
+   textBox.ClearTextOnFocus = false
+   textBox.Parent = verifyBox
+
+   local txtCorner = Instance.new("UICorner")
+   txtCorner.CornerRadius = UDim.new(0, 8)
+   txtCorner.Parent = textBox
+
+   -- Tombol Submit / Masuk
+   local submitBtn = Instance.new("TextButton")
+   submitBtn.Size = UDim2.new(0, 320, 0, 40)
+   submitBtn.Position = UDim2.new(0.5, -160, 0, 165)
+   submitBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+   submitBtn.Text = "VERIFIKASI"
+   submitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+   submitBtn.TextSize = 16
+   submitBtn.Font = Enum.Font.SourceSansBold
+   submitBtn.Parent = verifyBox
+
+   local btnCorner = Instance.new("UICorner")
+   btnCorner.CornerRadius = UDim.new(0, 8)
+   btnCorner.Parent = submitBtn
+
+   local verified = false
+
+   submitBtn.MouseButton1Click:Connect(function()
+      local enteredName = textBox.Text
+      -- Cek apakah username yang dimasukkan sesuai dengan LocalPlayer.Name
+      if string.lower(enteredName) == string.lower(LocalPlayer.Name) then
+         verified = true
+         submitBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+         submitBtn.Text = "Berhasil! Masuk..."
+         
+         task.wait(0.8)
+         verifyGui:Destroy()
+      else
+         submitBtn.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+         submitBtn.Text = "Username Salah! Gunakan Username Asli"
+         task.wait(1)
+         submitBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+         submitBtn.Text = "VERIFIKASI"
+      end
+   end)
+
+   while not verified do
+      task.wait(0.1)
+   end
+end
+
+-- Jalankan verifikasi username di awal eksekusi
+runUsernameVerification()
+
+-- ==========================================
 -- SETUP SOUND EFEK
 -- ==========================================
 local function playSound(soundId)
@@ -97,9 +210,6 @@ local function saveUserRating(starCount)
    end)
 end
 
--- ==========================================
--- FITUR POP-UP RATING BINTANG 1 SAMPAI 100
--- ==========================================
 local function showRatingPopup()
    if not checkCanRate() then
       return
@@ -376,7 +486,8 @@ local function createFPSCounter()
    fpsLabel.Position = UDim2.new(0, 15, 0, 15)
    fpsLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
    fpsLabel.BackgroundTransparency = 0.4
-   fpsLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+   -- Warna teks diubah menjadi Kuning Tebal (Gold) sesuai permintaan sebelumnya
+   fpsLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
    fpsLabel.TextScaled = true
    fpsLabel.Font = Enum.Font.SourceSansBold
    fpsLabel.Text = "Jam: 00:00:00\nFPS: 0\nStatus: " .. activeKeyType .. "\nWaktu: Memuat..."
@@ -465,126 +576,4 @@ if not isOwner then
                shouldReset = true
             elseif targetType == "FREE" and (activeKey == "GOODMODE1" or activeKeyType == "FREE") then
                shouldReset = true
-            elseif targetType == "VIP" and (activeKey == "VIPBUYHILO" or activeKeyType == "VIP") then
-               shouldReset = true
-            elseif targetType == "PERMANEN" and (activeKey == "UPDATEYSUFF" or activeKeyType == "PERMANEN") then
-               shouldReset = true
-            end
-
-            if shouldReset then
-               if delfile and isfile(rayFilePath) then delfile(rayFilePath) end
-               if delfile and isfile(timerFilePath) then delfile(timerFilePath) end
-               
-               Rayfield:Notify({
-                  Title = "⚠️ KEY RESET BY OWNER",
-                  Content = "Key kategori (" .. targetType .. ") Anda di-reset! Mereload game...",
-                  Duration = 5,
-                  Image = 4483362458,
-               })
-               
-               task.wait(2)
-               game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
-            end
-         end)
-      end)
-   end
-end
-
-local Window = Rayfield:CreateWindow({
-   Name = "👑 PREMIUM 👑 Chocola Hub | Steal an Egg",
-   LoadingTitle = "Chocola Hub is Loading...",
-   LoadingSubtitle = isOwner and "Welcome Back, Owner @ysuff_store!" or "by @ysuff_store",
-   Theme = "Default",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "ChocolaHub",
-      FileName = "StealAnEggKeySystem"
-   },
-   Discord = {
-      Enabled = true,
-      Invite = "x2AzN95s",
-      RememberJoins = true
-   },
-   KeySystem = not isOwner,
-   KeySettings = {
-      Title = "👑 PREMIUM 👑 Chocola Hub - Key System",
-      Subtitle = "Masukkan Key Anda",
-      Note = "WELCOME!!!👑\nTO MY SCRIPT\n\n🔑 FREE (1 Jam): GOODMODE1\n🔑 VIP (30 Hari): VIPBUYHILO\n🔑 PERMANEN: UPDATEYSUFF",
-      FileName = "ChocolaKeySystem",
-      SaveKey = true,
-      GrabKeyFromSite = false,
-      Key = MainKeys
-   }
-})
-
--- ==========================================
--- NOTIFIKASI WELCOME, ANTI FLING & POPUP RATING
--- ==========================================
-task.spawn(function()
-   task.wait(1)
-   
-   pcall(function()
-      local char = LocalPlayer.Character
-      if char and char:FindFirstChild("HumanoidRootPart") then
-         for _, part in ipairs(char:GetDescendants()) do
-            if part:IsA("BasePart") then
-               part.Velocity = Vector3.new(0, 0, 0)
-               part.RotVelocity = Vector3.new(0, 0, 0)
-            end
-         end
-      end
-   end)
-   
-   local notifTitle = "Chocola Hub"
-   local notifContent = "WELCOME MEMBER"
-   
-   if isOwner then
-      notifTitle = "👑 Owner Access"
-      notifContent = "WELCOME OWNER 🎉"
-   else
-      pcall(function()
-         local filePath = "ChocolaHub/ChocolaKeySystem.json"
-         if isfile and isfile(filePath) then
-            local data = HttpService:JSONDecode(readfile(filePath))
-            local k = data.Key or data.ChocolaKey or ""
-            if k == "UPDATEYSUFF" then
-               notifContent = "WELCOME MEMBER PREMIUM"
-            elseif k == "VIPBUYHILO" then
-               notifContent = "WELCOME MEMBER VIP"
-            elseif k == "GOODMODE1" then
-               notifContent = "WELCOME MEMBER FREE"
-            else
-               notifContent = "WELCOME MEMBER " .. string.upper(activeKeyType)
-            end
-         end
-      end)
-   end
-   
-   Rayfield:Notify({
-      Title = notifTitle,
-      Content = notifContent,
-      Duration = 5,
-      Image = 4483362458,
-   })
-   
-   task.delay(0.5, showRatingPopup)
-end)
-
-local Tab = Window:CreateTab("Pet Spawner", 4483362458)
-local PlayersTab = Window:CreateTab("Pemain Login", 4483362458)
-local AvatarTab = Window:CreateTab("Avatar Pemain", 4483362458)
-local MapTab = Window:CreateTab("Map Pemain", 4483362458)
-local SettingsTab = Window:CreateTab("Settings & Anti Lag", 4483362458)
-
-Tab:CreateSection("Credit")
-Tab:CreateLabel("@ysuff_store")
-if isOwner then
-   Tab:CreateLabel("👑 Status: Logged in as Owner")
-end
-
-Tab:CreateSection("Main Features")
-
-Tab:CreateButton({
-   Name = "Load Pet Spawner Script",
-   Callback = function()
-      local success
+    
