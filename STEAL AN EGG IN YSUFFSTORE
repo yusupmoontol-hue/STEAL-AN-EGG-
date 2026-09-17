@@ -587,4 +587,4 @@ Tab:CreateSection("Main Features")
 Tab:CreateButton({
    Name = "Load Pet Spawner Script",
    Callback = function()
-      local success# STEAL-AN-EGG-
+      local success
