@@ -1,0 +1,565 @@
+-- PERINGATAN!!
+-- JANGAN DI SEBAR SCRIPT NYA ATAU DI KUNCI SCRIPT!!👑
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local OwnerUsername = "kakir79"
+local isOwner = (LocalPlayer.Name == OwnerUsername)
+
+-- ==========================================
+-- DATABASE WHITELIST (DIKELOLA PEMILIK/OWNER)
+-- ==========================================
+-- Daftar Username yang diizinkan menggunakan key VIP / Permanen
+local VIPBuyers = {}
+local PermanentBuyers = {}
+
+local userStatus = "👑 MEMBER (FREE) 👑"
+
+local function runKeySystem()
+   if isOwner then
+      userStatus = "👑 OWNER 👑"
+      return -- Owner langsung lolos tanpa key
+   end
+
+   local verifyGui = Instance.new("ScreenGui")
+   verifyGui.Name = "ChocolaKeySystemGui"
+   verifyGui.ResetOnSpawn = false
+   verifyGui.IgnoreGuiInset = true
+   verifyGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+
+   local darkBg = Instance.new("Frame")
+   darkBg.Size = UDim2.new(1, 0, 1, 0)
+   darkBg.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+   darkBg.BackgroundTransparency = 0.05
+   darkBg.BorderSizePixel = 0
+   darkBg.Parent = verifyGui
+
+   local verifyBox = Instance.new("Frame")
+   verifyBox.Size = UDim2.new(0, 400, 0, 310)
+   verifyBox.Position = UDim2.new(0.5, -200, 0.5, -155)
+   verifyBox.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+   verifyBox.BorderSizePixel = 0
+   verifyBox.Parent = verifyGui
+
+   local boxCorner = Instance.new("UICorner")
+   boxCorner.CornerRadius = UDim.new(0, 12)
+   boxCorner.Parent = verifyBox
+
+   local titleLbl = Instance.new("TextLabel")
+   titleLbl.Size = UDim2.new(1, 0, 0, 40)
+   titleLbl.Position = UDim2.new(0, 0, 0, 15)
+   titleLbl.BackgroundTransparency = 1
+   titleLbl.Text = "👑 CHOCOLA HUB - SECURE KEY 👑"
+   titleLbl.TextColor3 = Color3.fromRGB(255, 215, 0)
+   titleLbl.TextScaled = true
+   titleLbl.Font = Enum.Font.SourceSansBold
+   titleLbl.Parent = verifyBox
+
+   local descLbl = Instance.new("TextLabel")
+   descLbl.Size = UDim2.new(1, -30, 0, 75)
+   descLbl.Position = UDim2.new(0, 15, 0, 55)
+   descLbl.BackgroundTransparency = 1
+   descLbl.Text = "Masukkan Key Pembelian Anda:\n• Free Key: ERROR81\n• VIP / Permanen: Wajib sudah didaftarkan oleh Owner"
+   descLbl.TextColor3 = Color3.fromRGB(200, 210, 230)
+   descLbl.TextScaled = true
+   descLbl.Font = Enum.Font.SourceSans
+   descLbl.TextWrapped = true
+   descLbl.Parent = verifyBox
+
+   local keyInput = Instance.new("TextBox")
+   keyInput.Size = UDim2.new(0, 340, 0, 45)
+   keyInput.Position = UDim2.new(0.5, -170, 0, 145)
+   keyInput.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+   keyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+   keyInput.PlaceholderText = "Ketik Key di sini..."
+   keyInput.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+   keyInput.Text = ""
+   keyInput.TextScaled = true
+   keyInput.Font = Enum.Font.SourceSansBold
+   keyInput.Parent = verifyBox
+
+   local inputCorner = Instance.new("UICorner")
+   inputCorner.CornerRadius = UDim.new(0, 8)
+   inputCorner.Parent = keyInput
+
+   local submitBtn = Instance.new("TextButton")
+   submitBtn.Size = UDim2.new(0, 340, 0, 40)
+   submitBtn.Position = UDim2.new(0.5, -170, 0, 220)
+   submitBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+   submitBtn.Text = "SUBMIT KEY"
+   submitBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+   submitBtn.TextScaled = true
+   submitBtn.Font = Enum.Font.SourceSansBold
+   submitBtn.Parent = verifyBox
+
+   local btnCorner = Instance.new("UICorner")
+   btnCorner.CornerRadius = UDim.new(0, 8)
+   btnCorner.Parent = submitBtn
+
+   local infoMsg = Instance.new("TextLabel")
+   infoMsg.Size = UDim2.new(1, 0, 0, 25)
+   infoMsg.Position = UDim2.new(0, 0, 0, 275)
+   infoMsg.BackgroundTransparency = 1
+   infoMsg.TextColor3 = Color3.fromRGB(255, 100, 100)
+   infoMsg.TextScaled = true
+   infoMsg.Font = Enum.Font.SourceSans
+   infoMsg.Text = ""
+   infoMsg.Parent = verifyBox
+
+   local verified = false
+
+   submitBtn.MouseButton1Click:Connect(function()
+      local inputVal = tostring(keyInput.Text):gsub("%s+", "")
+      local currentName = LocalPlayer.Name
+
+      if inputVal == "ERROR81" then
+         userStatus = "👑 MEMBER (FREE) 👑"
+         verified = true
+      elseif inputVal == "VIPCHOCO99" then
+         local isAllowed = false
+         for _, name in ipairs(VIPBuyers) do
+            if name == currentName then
+               isAllowed = true
+               break
+            end
+         end
+         if isAllowed then
+            userStatus = "👑 VIP MEMBER 👑"
+            verified = true
+         else
+            infoMsg.Text = "❌ Key VIP benar, tapi Username kamu belum didaftarkan Owner!"
+         end
+      elseif inputVal == "PERMCHOCO777" then
+         local isAllowed = false
+         for _, name in ipairs(PermanentBuyers) do
+            if name == currentName then
+               isAllowed = true
+               break
+            end
+         end
+         if isAllowed then
+            userStatus = "👑 PERMANEN MEMBER 👑"
+            verified = true
+         else
+            infoMsg.Text = "❌ Key Permanen benar, tapi Username kamu belum didaftarkan Owner!"
+         end
+      else
+         infoMsg.Text = "❌ Key yang kamu masukkan salah!"
+      end
+
+      if verified then
+         submitBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+         submitBtn.Text = "AKSES DITERIMA! MEMBUKA..."
+         infoMsg.TextColor3 = Color3.fromRGB(100, 255, 100)
+         infoMsg.Text = "Sukses login sebagai " .. userStatus
+         task.wait(0.8)
+         verifyGui:Destroy()
+      else
+         task.wait(1)
+         infoMsg.Text = ""
+      end
+   end)
+
+   while not verified do
+      task.wait(0.1)
+   end
+end
+
+runKeySystem()
+
+-- ==========================================
+-- FITUR SMARTPHONE KECIL (YSUFF AI CHAT)
+-- ==========================================
+local function createPhoneAIChat()
+   local phoneGui = Instance.new("ScreenGui")
+   phoneGui.Name = "YsuffPhoneAIGui"
+   phoneGui.ResetOnSpawn = false
+   phoneGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+
+   local toggleBtn = Instance.new("TextButton")
+   toggleBtn.Name = "TogglePhoneBtn"
+   toggleBtn.Size = UDim2.new(0, 110, 0, 30)
+   toggleBtn.Position = UDim2.new(1, -125, 0, 10)
+   toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+   toggleBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+   toggleBtn.Text = "📱 YSUFF AI"
+   toggleBtn.TextScaled = true
+   toggleBtn.Font = Enum.Font.SourceSansBold
+   toggleBtn.Parent = phoneGui
+
+   local btnCorner = Instance.new("UICorner")
+   btnCorner.CornerRadius = UDim.new(0, 8)
+   btnCorner.Parent = toggleBtn
+
+   local phoneBody = Instance.new("Frame")
+   phoneBody.Name = "PhoneBody"
+   phoneBody.Size = UDim2.new(0, 160, 0, 280)
+   phoneBody.Position = UDim2.new(1, -175, 0, 45)
+   phoneBody.BackgroundColor3 = Color3.fromRGB(15, 18, 25)
+   phoneBody.BorderSizePixel = 0
+   phoneBody.Visible = true 
+   phoneBody.Parent = phoneGui
+
+   local bodyCorner = Instance.new("UICorner")
+   bodyCorner.CornerRadius = UDim.new(0, 14)
+   bodyCorner.Parent = phoneBody
+
+   local bezel = Instance.new("UIStroke")
+   bezel.Color = Color3.fromRGB(60, 70, 90)
+   bezel.Thickness = 2
+   bezel.Parent = phoneBody
+
+   local header = Instance.new("Frame")
+   header.Size = UDim2.new(1, 0, 0, 32)
+   header.BackgroundColor3 = Color3.fromRGB(25, 32, 45)
+   header.BorderSizePixel = 0
+   header.Parent = phoneBody
+
+   local headerCorner = Instance.new("UICorner")
+   headerCorner.CornerRadius = UDim.new(0, 14)
+   headerCorner.Parent = header
+
+   local headerTitle = Instance.new("TextLabel")
+   headerTitle.Size = UDim2.new(1, -35, 1, 0)
+   headerTitle.Position = UDim2.new(0, 6, 0, 0)
+   headerTitle.BackgroundTransparency = 1
+   headerTitle.Text = "📱 YSUFF AI"
+   headerTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+   headerTitle.TextScaled = true
+   headerTitle.Font = Enum.Font.SourceSansBold
+   headerTitle.Parent = header
+
+   local closePhoneBtn = Instance.new("TextButton")
+   closePhoneBtn.Size = UDim2.new(0, 24, 0, 24)
+   closePhoneBtn.Position = UDim2.new(1, -28, 0, 4)
+   closePhoneBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+   closePhoneBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+   closePhoneBtn.Text = "X"
+   closePhoneBtn.TextScaled = true
+   closePhoneBtn.Font = Enum.Font.SourceSansBold
+   closePhoneBtn.Parent = header
+
+   local closeCorner = Instance.new("UICorner")
+   closeCorner.CornerRadius = UDim.new(0, 6)
+   closeCorner.Parent = closePhoneBtn
+
+   local chatScroll = Instance.new("ScrollingFrame")
+   chatScroll.Size = UDim2.new(1, -8, 1, -78)
+   chatScroll.Position = UDim2.new(0, 4, 0, 36)
+   chatScroll.BackgroundTransparency = 1
+   chatScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+   chatScroll.ScrollBarThickness = 3
+   chatScroll.Parent = phoneBody
+
+   local uiListLayout = Instance.new("UIListLayout")
+   uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+   uiListLayout.Padding = UDim.new(0, 4)
+   uiListLayout.Parent = chatScroll
+
+   local chatInput = Instance.new("TextBox")
+   chatInput.Size = UDim2.new(1, -8, 0, 32)
+   chatInput.Position = UDim2.new(0, 4, 1, -36)
+   chatInput.BackgroundColor3 = Color3.fromRGB(30, 40, 55)
+   chatInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+   chatInput.PlaceholderText = "Ketik chat atau tanya..."
+   chatInput.PlaceholderColor3 = Color3.fromRGB(130, 130, 130)
+   chatInput.Text = ""
+   chatInput.TextScaled = true
+   chatInput.Font = Enum.Font.SourceSans
+   chatInput.Parent = phoneBody
+
+   local inputCorner = Instance.new("UICorner")
+   inputCorner.CornerRadius = UDim.new(0, 6)
+   inputCorner.Parent = chatInput
+
+   local function addMessage(sender, text, color)
+      local msgLabel = Instance.new("TextLabel")
+      msgLabel.Size = UDim2.new(1, -4, 0, 28)
+      msgLabel.BackgroundTransparency = 0.2
+      msgLabel.BackgroundColor3 = color
+      msgLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+      msgLabel.Text = sender .. ": " .. text
+      msgLabel.TextScaled = true
+      msgLabel.Font = Enum.Font.SourceSans
+      msgLabel.TextWrapped = true
+      msgLabel.Parent = chatScroll
+
+      local c = Instance.new("UICorner")
+      c.CornerRadius = UDim.new(0, 5)
+      c.Parent = msgLabel
+
+      chatScroll.CanvasSize = UDim2.new(0, 0, 0, uiListLayout.AbsoluteContentSize.Y + 15)
+      chatScroll.CanvasPosition = Vector2.new(0, chatScroll.CanvasSize.Y.Offset)
+   end
+
+   addMessage("YSUFF AI", "Halo " .. LocalPlayer.Name .. "! Ada yang mau diobrolin atau ditanyakan?", Color3.fromRGB(50, 70, 100))
+
+   chatInput.FocusLost:Connect(function(enterPressed)
+      if enterPressed and chatInput.Text ~= "" then
+         local userText = chatInput.Text
+         addMessage("Kamu", userText, Color3.fromRGB(20, 90, 60))
+         local currentInput = userText
+         chatInput.Text = ""
+
+         task.spawn(function()
+            task.wait(0.3)
+            local reply = "Wuih, mantap banget tuh " .. LocalPlayer.Name .. "! Cerita lagi dong."
+            local lower = string.lower(currentInput)
+
+            if string.find(lower, "halo") or string.find(lower, "hai") or string.find(lower, "p") or string.find(lower, "oy") then
+               reply = "Halo juga " .. LocalPlayer.Name .. "! Ada yang bisa dibantu?"
+            elseif string.find(lower, "owner") or string.find(lower, "kakir") or string.find(lower, "pembuat") then
+               reply = "Pencipta script keren ini adalah @ysuff_store (kakir79)!"
+            elseif string.find(lower, "store") or string.find(lower, "@ysuff_store") then
+               reply = "Jangan lupa mampir & cek update terbaru di @ysuff_store ya!"
+            elseif string.find(lower, "key") or string.find(lower, "status") or string.find(lower, "akses") then
+               reply = "Statusmu sekarang: " .. userStatus .. ". Key VIP & Permanen diatur langsung oleh Owner!"
+            elseif string.find(lower, "siapa kamu") or string.find(lower, "nama kamu") or string.find(lower, "bot") then
+               reply = "Aku YSUFF AI, asisten virtual pribadi kamu di Chocola Hub!"
+            elseif string.find(lower, "terima kasih") or string.find(lower, "thanks") or string.find(lower, "makasih") then
+               reply = "Sama-sama " .. LocalPlayer.Name .. "! Senang bisa nemenin kamu."
+            end
+
+            addMessage("YSUFF AI", reply, Color3.fromRGB(50, 70, 100))
+         end)
+      end
+   end)
+
+   toggleBtn.MouseButton1Click:Connect(function()
+      phoneBody.Visible = not phoneBody.Visible
+      if phoneBody.Visible then
+         toggleBtn.Text = "📱 YSUFF AI"
+      else
+         toggleBtn.Text = "📱 BUKA HP"
+      end
+   end)
+
+   closePhoneBtn.MouseButton1Click:Connect(function()
+      phoneBody.Visible = false
+      toggleBtn.Text = "📱 BUKA HP"
+   end)
+end
+
+pcall(createPhoneAIChat)
+
+-- ==========================================
+-- SETUP CUSTOM HEAD TITLE
+-- ==========================================
+local customHeadTitleText = "👑 @ysuff_store (OWNER) 👑"
+
+local function updateHeadTitle()
+   local character = LocalPlayer.Character
+   if not character then return end
+   local head = character:WaitForChild("Head", 5)
+   
+   if head then
+      local billboard = head:FindFirstChild("ChocolaHeadTitle")
+      if not billboard then
+         billboard = Instance.new("BillboardGui")
+         billboard.Name = "ChocolaHeadTitle"
+         billboard.Size = UDim2.new(0, 240, 0, 50)
+         billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+         billboard.AlwaysOnTop = true
+         billboard.Parent = head
+         
+         local textLabel = Instance.new("TextLabel")
+         textLabel.Name = "TitleText"
+         textLabel.Size = UDim2.new(1, 0, 1, 0)
+         textLabel.BackgroundTransparency = 1
+         textLabel.TextScaled = true
+         textLabel.Font = Enum.Font.SourceSansBold
+         textLabel.Parent = billboard
+      end
+      
+      local lbl = billboard:FindFirstChild("TitleText")
+      if lbl then
+         lbl.Text = customHeadTitleText
+      end
+   end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+   char:WaitForChild("Head", 5)
+   task.wait(0.5)
+   updateHeadTitle()
+end)
+
+if LocalPlayer.Character then
+   task.spawn(updateHeadTitle)
+end
+
+-- ==========================================
+-- FITUR FPS COUNTER & JAM HP
+-- ==========================================
+local function createFPSCounter()
+   local screenGui = Instance.new("ScreenGui")
+   screenGui.Name = "ChocolaFPSCounter"
+   screenGui.ResetOnSpawn = false
+   screenGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+
+   local fpsLabel = Instance.new("TextLabel")
+   fpsLabel.Name = "FPSLabel"
+   fpsLabel.Size = UDim2.new(0, 220, 0, 80)
+   fpsLabel.Position = UDim2.new(0, 15, 0, 15)
+   fpsLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+   fpsLabel.BackgroundTransparency = 0.4
+   fpsLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+   fpsLabel.TextScaled = true
+   fpsLabel.Font = Enum.Font.SourceSansBold
+   fpsLabel.Text = "Jam: 00:00:00\nFPS: 0\nStatus: " .. userStatus
+   fpsLabel.Parent = screenGui
+
+   local corner = Instance.new("UICorner")
+   corner.CornerRadius = UDim.new(0, 8)
+   corner.Parent = fpsLabel
+
+   local lastTick = tick()
+   local frameCount = 0
+
+   RunService.RenderStepped:Connect(function()
+      frameCount = frameCount + 1
+      local currentTick = tick()
+      
+      if currentTick - lastTick >= 1 then
+         local fps = math.floor(frameCount / (currentTick - lastTick))
+         local clockTime = os.date("%H:%M:%S")
+         
+         fpsLabel.Text = string.format("Jam: %s\nFPS: %d\nStatus: %s", clockTime, fps, userStatus)
+         frameCount = 0
+         lastTick = currentTick
+      end
+   end)
+end
+
+pcall(createFPSCounter)
+
+local Window = Rayfield:CreateWindow({
+   Name = "👑 Chocola Hub | " .. userStatus,
+   LoadingTitle = "Chocola Hub is Loading...",
+   LoadingSubtitle = "by @ysuff_store",
+   Theme = "Default",
+   ConfigurationSaving = { Enabled = false },
+   Discord = { Enabled = true, Invite = "x2AzN95s", RememberJoins = true },
+   KeySystem = false
+})
+
+task.spawn(function()
+   task.wait(1)
+   Rayfield:Notify({
+      Title = "Chocola Hub",
+      Content = "Sukses Masuk! Status Anda: " .. userStatus,
+      Duration = 6,
+      Image = 4483362458,
+   })
+end)
+
+local Tab = Window:CreateTab("Pet Spawner", 4483362458)
+local PlayersTab = Window:CreateTab("Pemain Login", 4483362458)
+local MapTab = Window:CreateTab("Map Pemain", 4483362458)
+
+local OwnerTab = nil
+if isOwner then
+   OwnerTab = Window:CreateTab("👑 Owner Panel", 4483362458)
+end
+
+local SettingsTab = Window:CreateTab("Settings & Anti Lag", 4483362458)
+
+-- ==========================================
+-- MENU PANEL KHUSUS OWNER
+-- ==========================================
+if isOwner and OwnerTab then
+   OwnerTab:CreateSection("👑 KONTROL UTAMA SUPREME OWNER")
+   OwnerTab:CreateLabel("Halo, " .. LocalPlayer.Name .. "! Anda memiliki akses absolut.")
+
+   OwnerTab:CreateButton({
+      Name = "🛡️ God Mode (Anti Mati)",
+      Callback = function()
+         pcall(function()
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChildOfClass("Humanoid") then
+               local humanoid = char:FindFirstChildOfClass("Humanoid")
+               humanoid.MaxHealth = math.huge
+               humanoid.Health = math.huge
+            end
+         end)
+         Rayfield:Notify({Title = "God Mode Aktif", Content = "Darah tak terbatas!", Duration = 3, Image = 4483362458})
+      end,
+   })
+
+   OwnerTab:CreateButton({
+      Name = "👻 Invisibility (Menghilang)",
+      Callback = function()
+         pcall(function()
+            local char = LocalPlayer.Character
+            if char then
+               for _, v in pairs(char:GetDescendants()) do
+                  if v:IsA("BasePart") or v:IsA("MeshPart") then v.Transparency = 1 end
+               end
+            end
+         end)
+         Rayfield:Notify({Title = "Invisibility Aktif", Content = "Karakter transparan!", Duration = 3, Image = 4483362458})
+      end,
+   })
+
+   OwnerTab:CreateSection("🔑 KONTROL WHITELIST KEY PEMBELI")
+   
+   local inputVIPUser = ""
+   OwnerTab:CreateInput({
+      Name = "Tambah Username Pembeli VIP",
+      PlaceholderText = "Ketik username Roblox...",
+      RemoveTextAfterFocusLost = false,
+      Callback = function(text)
+         inputVIPUser = text
+      end,
+   })
+
+   OwnerTab:CreateButton({
+      Name = "✅ Daftarkan ke VIP List",
+      Callback = function()
+         if inputVIPUser ~= "" then
+            table.insert(VIPBuyers, inputVIPUser)
+            Rayfield:Notify({Title = "Berhasil", Content = inputVIPUser .. " ditambahkan ke VIP List!", Duration = 4, Image = 4483362458})
+         end
+      end,
+   })
+
+   local inputPermUser = ""
+   OwnerTab:CreateInput({
+      Name = "Tambah Username Pembeli Permanen",
+      PlaceholderText = "Ketik username Roblox...",
+      RemoveTextAfterFocusLost = false,
+      Callback = function(text)
+         inputPermUser = text
+      end,
+   })
+
+   OwnerTab:CreateButton({
+      Name = "✅ Daftarkan ke Permanen List",
+      Callback = function()
+         if inputPermUser ~= "" then
+            table.insert(PermanentBuyers, inputPermUser)
+            Rayfield:Notify({Title = "Berhasil", Content = inputPermUser .. " ditambahkan ke Permanen List!", Duration = 4, Image = 4483362458})
+         end
+      end,
+   })
+end
+
+Tab:CreateSection("Credit")
+Tab:CreateLabel("@ysuff_store")
+Tab:CreateLabel("Status: " .. userStatus)
+
+Tab:CreateButton({
+   Name = "Load Fake Admin",
+   Callback = function()
+      pcall(function() loadstring(game:HttpGet("https://flowauth.net/v1/loaders/e890aad1c32cda0a0e14d000aa06dd97.lua"))() end)
+   end,
+})
+
+Tab:CreateButton({
+   Name = "Load Pet Spawner Script",
+   Callback = function()
+      pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/chocolascript-glitch/Chocola-Pet-Spawner-steal-an-egg/refs
