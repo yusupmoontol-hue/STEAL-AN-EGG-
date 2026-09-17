@@ -22,7 +22,7 @@ local userStatus = "👑 MEMBER (FREE) 👑"
 local function runKeySystem()
    if isOwner then
       userStatus = "👑 OWNER 👑"
-     return Owner langsung lolos tanpa key
+return Owner langsung lolos tanpa key
    end
 
    local verifyGui = Instance.new("ScreenGui")
