@@ -1,1 +1,590 @@
-# STEAL-AN-EGG-
+-- PERINGATAN!!
+-- JANGAN DI SEBAR SCRIPT NYA ATAU DI KUNCI SCRIPT!!👑
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local HttpService = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- ==========================================
+-- SETUP SOUND EFEK
+-- ==========================================
+local function playSound(soundId)
+   pcall(function()
+      local s = Instance.new("Sound")
+      s.SoundId = "rbxassetid://" .. tostring(soundId)
+      s.Volume = 1
+      s.Parent = game:GetService("SoundService")
+      s:Play()
+      s.Ended:Connect(function()
+         s:Destroy()
+      end)
+   end)
+end
+
+-- ==========================================
+-- SETUP DAFTAR KEY UTAMA & KEY BUATAN OWNER
+-- ==========================================
+local OwnerUsername = "kakir79"
+local isOwner = (LocalPlayer.Name == OwnerUsername)
+
+local MainKeys = {"GOODMODE1", "VIPBUYHILO", "UPDATEYSUFF"}
+if isOwner then
+   table.insert(MainKeys, "OWNERYSUFF79")
+end
+
+pcall(function()
+   local ownerKeyDatabasePath = "ChocolaHub/OwnerGeneratedKeys.json"
+   if isfile and isfile(ownerKeyDatabasePath) then
+      local db = HttpService:JSONDecode(readfile(ownerKeyDatabasePath))
+      for kName, _ in pairs(db) do
+         local exists = false
+         for _, existingKey in ipairs(MainKeys) do
+            if existingKey == kName then
+               exists = true
+               break
+            end
+         end
+         if not exists then
+            table.insert(MainKeys, kName)
+         end
+      end
+   end
+end)
+
+-- ==========================================
+-- SETUP DATABASE RATING BINTANG (AUTO RESET 1 JAM)
+-- ==========================================
+local ratingDatabasePath = "ChocolaHub/ScriptRatingDatabase.json"
+
+local function checkCanRate()
+   local canRate = true
+   pcall(function()
+      if isfile and isfile(ratingDatabasePath) then
+         local ratings = HttpService:JSONDecode(readfile(ratingDatabasePath))
+         local userRecord = ratings[LocalPlayer.Name]
+         
+         if userRecord then
+            local savedTimestamp = userRecord.Timestamp or 0
+            local currentTime = os.time()
+            if (currentTime - savedTimestamp) < 3600 then
+               canRate = false
+            end
+         end
+      end
+   end)
+   return canRate
+end
+
+local function saveUserRating(starCount)
+   pcall(function()
+      local ratings = {}
+      if isfile and isfile(ratingDatabasePath) then
+         ratings = HttpService:JSONDecode(readfile(ratingDatabasePath))
+      end
+      
+      ratings[LocalPlayer.Name] = {
+         Stars = starCount,
+         Time = os.date("%d/%m/%Y %H:%M:%S"),
+         Timestamp = os.time()
+      }
+      
+      if writefile then
+         writefile(ratingDatabasePath, HttpService:JSONEncode(ratings))
+      end
+   end)
+end
+
+-- ==========================================
+-- FITUR POP-UP RATING BINTANG 1 SAMPAI 100
+-- ==========================================
+local function showRatingPopup()
+   if not checkCanRate() then
+      return
+   end
+
+   local rateGui = Instance.new("ScreenGui")
+   rateGui.Name = "ChocolaRatingPopupGui"
+   rateGui.ResetOnSpawn = false
+   rateGui.IgnoreGuiInset = true
+   rateGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+
+   local rateBg = Instance.new("Frame")
+   rateBg.Size = UDim2.new(1, 0, 1, 0)
+   rateBg.BackgroundColor3 = Color3.fromRGB(10, 25, 45)
+   rateBg.BackgroundTransparency = 0.2
+   rateBg.BorderSizePixel = 0
+   rateBg.Parent = rateGui
+
+   local rateBox = Instance.new("Frame")
+   rateBox.Size = UDim2.new(0, 420, 0, 260)
+   rateBox.Position = UDim2.new(0.5, -210, 0.5, -130)
+   rateBox.BackgroundColor3 = Color3.fromRGB(15, 20, 30)
+   rateBox.BorderSizePixel = 0
+   rateBox.Parent = rateGui
+
+   local rCorner = Instance.new("UICorner")
+   rCorner.CornerRadius = UDim.new(0, 12)
+   rCorner.Parent = rateBox
+
+   local rateTitle = Instance.new("TextLabel")
+   rateTitle.Size = UDim2.new(1, 0, 0, 35)
+   rateTitle.Position = UDim2.new(0, 0, 0, 12)
+   rateTitle.BackgroundTransparency = 1
+   rateTitle.Text = "⭐ RATE SCRIPT CHOCOLA HUB (1-100) ⭐"
+   rateTitle.TextColor3 = Color3.fromRGB(255, 215, 0)
+   rateTitle.TextScaled = true
+   rateTitle.Font = Enum.Font.SourceSansBold
+   rateTitle.Parent = rateBox
+
+   local rateDesc = Instance.new("TextLabel")
+   rateDesc.Size = UDim2.new(1, -30, 0, 45)
+   rateDesc.Position = UDim2.new(0, 15, 0, 52)
+   rateDesc.BackgroundTransparency = 1
+   rateDesc.Text = "Halo [" .. LocalPlayer.Name .. "]! Pilih rating bintangmu hingga 100 ya! (1x pakai per jam) 😈"
+   rateDesc.TextColor3 = Color3.fromRGB(255, 255, 255)
+   rateDesc.TextScaled = true
+   rateDesc.Font = Enum.Font.SourceSans
+   rateDesc.TextWrapped = true
+   rateDesc.Parent = rateBox
+
+   local starButtonsContainer = Instance.new("ScrollingFrame")
+   starButtonsContainer.Size = UDim2.new(0, 390, 0, 100)
+   starButtonsContainer.Position = UDim2.new(0.5, -195, 0, 105)
+   starButtonsContainer.BackgroundTransparency = 1
+   starButtonsContainer.CanvasSize = UDim2.new(0, 0, 0, 110)
+   starButtonsContainer.ScrollBarThickness = 4
+   starButtonsContainer.Parent = rateBox
+
+   local uiGrid = Instance.new("UIGridLayout")
+   uiGrid.CellSize = UDim2.new(0, 70, 0, 42)
+   uiGrid.CellPadding = UDim2.new(0, 6, 0, 6)
+   uiGrid.SortOrder = Enum.SortOrder.LayoutOrder
+   uiGrid.Parent = starButtonsContainer
+
+   for i = 1, 10 do
+      local starCountValue = i * 10
+      local starBtn = Instance.new("TextButton")
+      starBtn.BackgroundColor3 = Color3.fromRGB(30, 40, 60)
+      starBtn.Text = starCountValue .. " ⭐"
+      starBtn.TextColor3 = Color3.fromRGB(255, 215, 0)
+      starBtn.TextScaled = true
+      starBtn.Font = Enum.Font.SourceSansBold
+      starBtn.Parent = starButtonsContainer
+
+      local btnCorner = Instance.new("UICorner")
+      btnCorner.CornerRadius = UDim.new(0, 8)
+      btnCorner.Parent = starBtn
+
+      starBtn.MouseButton1Click:Connect(function()
+         playSound(4590657391)
+         saveUserRating(starCountValue)
+         
+         game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "⭐ TERIMA KASIH TELAH RATING!",
+            Text = "User [" .. LocalPlayer.Name .. "] sukses memberi " .. starCountValue .. " Bintang! 🚀",
+            Duration = 5
+         })
+         
+         rateGui:Destroy()
+      end)
+   end
+
+   local skipBtn = Instance.new("TextButton")
+   skipBtn.Size = UDim2.new(0, 200, 0, 25)
+   skipBtn.Position = UDim2.new(0.5, -100, 0, 220)
+   skipBtn.BackgroundTransparency = 1
+   skipBtn.Text = "Lewati / Nanti Saja"
+   skipBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+   skipBtn.TextScaled = true
+   skipBtn.Font = Enum.Font.SourceSans
+   skipBtn.Parent = rateBox
+
+   skipBtn.MouseButton1Click:Connect(function()
+      rateGui:Destroy()
+   end)
+end
+
+-- ==========================================
+-- VALIDASI KEPEMILIKAN KEY (ANTI SHARE KEY)
+-- ==========================================
+pcall(function()
+   local rayFilePath = "ChocolaHub/ChocolaKeySystem.json"
+   local bindingPath = "ChocolaHub/KeyBindingDatabase.json"
+   
+   if isfile and isfile(rayFilePath) then
+      local rData = HttpService:JSONDecode(readfile(rayFilePath))
+      local activeKey = rData.Key or rData.ChocolaKey or ""
+      
+      local isKeyRestricted = false
+      local keyType = "FREE"
+      
+      if activeKey == "VIPBUYHILO" or activeKey == "UPDATEYSUFF" then
+         isKeyRestricted = true
+      else
+         local ownerKeyDatabasePath = "ChocolaHub/OwnerGeneratedKeys.json"
+         if isfile and isfile(ownerKeyDatabasePath) then
+            local db = HttpService:JSONDecode(readfile(ownerKeyDatabasePath))
+            if db[activeKey] then
+               keyType = db[activeKey].Type or "FREE"
+               if keyType == "VIP" or keyType == "PERMANEN" then
+                  isKeyRestricted = true
+               end
+            end
+         end
+      end
+      
+      if isKeyRestricted and not isOwner then
+         local bindings = {}
+         if isfile and isfile(bindingPath) then
+            bindings = HttpService:JSONDecode(readfile(bindingPath))
+         end
+         
+         if bindings[activeKey] then
+            if bindings[activeKey] ~= LocalPlayer.Name then
+               if delfile then delfile(rayFilePath) end
+               game:GetService("StarterGui"):SetCore("SendNotification", {
+                  Title = "❌ KEY TIDAK VALID!",
+                  Text = "Key ini sudah terikat ke akun lain! Beli key sendiri ya 😈",
+                  Duration = 8
+               })
+               task.wait(3)
+               game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+            end
+         else
+            bindings[activeKey] = LocalPlayer.Name
+            if writefile then
+               writefile(bindingPath, HttpService:JSONEncode(bindings))
+            end
+         end
+      end
+   end
+end)
+
+-- ==========================================
+-- SETUP DETEKSI STATUS & WAKTU KEY DI AWAL
+-- ==========================================
+local activeKeyType = "MEMBER"
+local expireTimestamp = 0
+
+pcall(function()
+   local filePath = "ChocolaHub/ChocolaKeyTimer.json"
+   local rayFilePath = "ChocolaHub/ChocolaKeySystem.json"
+   local ownerKeyDatabasePath = "ChocolaHub/OwnerGeneratedKeys.json"
+   
+   local activeKey = ""
+   if isfile and isfile(rayFilePath) then
+      local rData = HttpService:JSONDecode(readfile(rayFilePath))
+      activeKey = rData.Key or rData.ChocolaKey or ""
+   end
+
+   if isOwner then
+      activeKeyType = "OWNER"
+      expireTimestamp = 0
+   else
+      if activeKey == "GOODMODE1" then
+         activeKeyType = "FREE"
+      elseif activeKey == "VIPBUYHILO" then
+         activeKeyType = "VIP"
+      elseif activeKey == "UPDATEYSUFF" then
+         activeKeyType = "PERMANEN"
+      else
+         local customType = "CUSTOM"
+         if isfile and isfile(ownerKeyDatabasePath) then
+            local db = HttpService:JSONDecode(readfile(ownerKeyDatabasePath))
+            if db[activeKey] then
+               customType = db[activeKey].Type or "FREE"
+            end
+         end
+         activeKeyType = customType
+      end
+
+      if isfile and isfile(filePath) then
+         local data = HttpService:JSONDecode(readfile(filePath))
+         expireTimestamp = data.ExpireTime or 0
+      else
+         local currentTime = os.time()
+         if activeKey == "GOODMODE1" or activeKeyType == "FREE" then
+            expireTimestamp = currentTime + 3600
+         elseif activeKey == "VIPBUYHILO" or activeKeyType == "VIP" then
+            expireTimestamp = currentTime + (30 * 86400)
+         else
+            expireTimestamp = 0 
+         end
+      end
+   end
+end)
+
+-- Variabel Global untuk Custom Title Kepala
+local customHeadTitleText = "👑 @ysuff_store 👑"
+
+local function updateHeadTitle()
+   local character = LocalPlayer.Character
+   if not character then return end
+   local head = character:WaitForChild("Head", 5)
+   
+   if head then
+      local billboard = head:FindFirstChild("ChocolaHeadTitle")
+      if not billboard then
+         billboard = Instance.new("BillboardGui")
+         billboard.Name = "ChocolaHeadTitle"
+         billboard.Size = UDim2.new(0, 220, 0, 50)
+         billboard.StudsOffset = Vector3.new(0, 2.5, 0)
+         billboard.AlwaysOnTop = true
+         billboard.Parent = head
+         
+         local textLabel = Instance.new("TextLabel")
+         textLabel.Name = "TitleText"
+         textLabel.Size = UDim2.new(1, 0, 1, 0)
+         textLabel.BackgroundTransparency = 1
+         textLabel.TextScaled = true
+         textLabel.Font = Enum.Font.SourceSansBold
+         textLabel.Parent = billboard
+      end
+      
+      local lbl = billboard:FindFirstChild("TitleText")
+      if lbl then
+         lbl.Text = customHeadTitleText
+      end
+   end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(char)
+   char:WaitForChild("Head", 5)
+   task.wait(0.5)
+   updateHeadTitle()
+end)
+
+if LocalPlayer.Character then
+   task.spawn(updateHeadTitle)
+end
+
+-- ==========================================
+-- FITUR FPS COUNTER, JAM HP & LIVE TIMER
+-- ==========================================
+local function createFPSCounter()
+   local screenGui = Instance.new("ScreenGui")
+   screenGui.Name = "ChocolaFPSCounter"
+   screenGui.ResetOnSpawn = false
+   screenGui.Parent = game:GetService("CoreGui") or LocalPlayer:WaitForChild("PlayerGui")
+
+   local fpsLabel = Instance.new("TextLabel")
+   fpsLabel.Name = "FPSLabel"
+   fpsLabel.Size = UDim2.new(0, 210, 0, 95)
+   fpsLabel.Position = UDim2.new(0, 15, 0, 15)
+   fpsLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+   fpsLabel.BackgroundTransparency = 0.4
+   fpsLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+   fpsLabel.TextScaled = true
+   fpsLabel.Font = Enum.Font.SourceSansBold
+   fpsLabel.Text = "Jam: 00:00:00\nFPS: 0\nStatus: " .. activeKeyType .. "\nWaktu: Memuat..."
+   fpsLabel.Parent = screenGui
+
+   local corner = Instance.new("UICorner")
+   corner.CornerRadius = UDim.new(0, 8)
+   corner.Parent = fpsLabel
+
+   local lastTick = tick()
+   local frameCount = 0
+
+   RunService.RenderStepped:Connect(function()
+      frameCount = frameCount + 1
+      local currentTick = tick()
+      
+      if currentTick - lastTick >= 1 then
+         local fps = math.floor(frameCount / (currentTick - lastTick))
+         local timeText = "Aktif Selamanya"
+         local clockTime = os.date("%H:%M:%S")
+         
+         if isOwner then
+            timeText = "Unlimited"
+         elseif activeKeyType == "PERMANEN" then
+            timeText = "Selamanya"
+         else
+            local remaining = expireTimestamp - os.time()
+            if remaining > 0 then
+               local days = math.floor(remaining / 86400)
+               local hours = math.floor((remaining % 86400) / 3600)
+               local minutes = math.floor((remaining % 3600) / 60)
+               local seconds = remaining % 60
+               
+               if days > 0 then
+                  timeText = string.format("%dD %02dJ %02dM", days, hours, minutes)
+               else
+                  timeText = string.format("%02dJ %02dM %02dD", hours, minutes, seconds)
+               end
+            else
+               timeText = "EXPIRED"
+            end
+         end
+         
+         fpsLabel.Text = string.format("Jam: %s\nFPS: %d\nStatus: %s\nWaktu: %s", clockTime, fps, activeKeyType, timeText)
+         frameCount = 0
+         lastTick = currentTick
+      end
+   end)
+end
+
+pcall(createFPSCounter)
+
+-- ==========================================
+-- SETUP RESET REMOTE & TARGETED RESET EVENT
+-- ==========================================
+local resetEventName = "ChocolaKeyResetRemote_v1"
+local resetRemote = ReplicatedStorage:FindFirstChild(resetEventName)
+
+if isOwner and not resetRemote then
+   pcall(function()
+      resetRemote = Instance.new("RemoteEvent")
+      resetRemote.Name = resetEventName
+      resetRemote.Parent = ReplicatedStorage
+   end)
+end
+
+if not isOwner then
+   pcall(function()
+      resetRemote = ReplicatedStorage:WaitForChild(resetEventName, 3)
+   end)
+   
+   if resetRemote then
+      resetRemote.OnClientEvent:Connect(function(targetType)
+         pcall(function()
+            local rayFilePath = "ChocolaHub/ChocolaKeySystem.json"
+            local timerFilePath = "ChocolaHub/ChocolaKeyTimer.json"
+            local activeKey = ""
+            
+            if isfile and isfile(rayFilePath) then
+               local rData = HttpService:JSONDecode(readfile(rayFilePath))
+               activeKey = rData.Key or rData.ChocolaKey or ""
+            end
+
+            local shouldReset = false
+            if targetType == "ALL" then
+               shouldReset = true
+            elseif targetType == "FREE" and (activeKey == "GOODMODE1" or activeKeyType == "FREE") then
+               shouldReset = true
+            elseif targetType == "VIP" and (activeKey == "VIPBUYHILO" or activeKeyType == "VIP") then
+               shouldReset = true
+            elseif targetType == "PERMANEN" and (activeKey == "UPDATEYSUFF" or activeKeyType == "PERMANEN") then
+               shouldReset = true
+            end
+
+            if shouldReset then
+               if delfile and isfile(rayFilePath) then delfile(rayFilePath) end
+               if delfile and isfile(timerFilePath) then delfile(timerFilePath) end
+               
+               Rayfield:Notify({
+                  Title = "⚠️ KEY RESET BY OWNER",
+                  Content = "Key kategori (" .. targetType .. ") Anda di-reset! Mereload game...",
+                  Duration = 5,
+                  Image = 4483362458,
+               })
+               
+               task.wait(2)
+               game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, LocalPlayer)
+            end
+         end)
+      end)
+   end
+end
+
+local Window = Rayfield:CreateWindow({
+   Name = "👑 PREMIUM 👑 Chocola Hub | Steal an Egg",
+   LoadingTitle = "Chocola Hub is Loading...",
+   LoadingSubtitle = isOwner and "Welcome Back, Owner @ysuff_store!" or "by @ysuff_store",
+   Theme = "Default",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "ChocolaHub",
+      FileName = "StealAnEggKeySystem"
+   },
+   Discord = {
+      Enabled = true,
+      Invite = "x2AzN95s",
+      RememberJoins = true
+   },
+   KeySystem = not isOwner,
+   KeySettings = {
+      Title = "👑 PREMIUM 👑 Chocola Hub - Key System",
+      Subtitle = "Masukkan Key Anda",
+      Note = "WELCOME!!!👑\nTO MY SCRIPT\n\n🔑 FREE (1 Jam): GOODMODE1\n🔑 VIP (30 Hari): VIPBUYHILO\n🔑 PERMANEN: UPDATEYSUFF",
+      FileName = "ChocolaKeySystem",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = MainKeys
+   }
+})
+
+-- ==========================================
+-- NOTIFIKASI WELCOME, ANTI FLING & POPUP RATING
+-- ==========================================
+task.spawn(function()
+   task.wait(1)
+   
+   pcall(function()
+      local char = LocalPlayer.Character
+      if char and char:FindFirstChild("HumanoidRootPart") then
+         for _, part in ipairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then
+               part.Velocity = Vector3.new(0, 0, 0)
+               part.RotVelocity = Vector3.new(0, 0, 0)
+            end
+         end
+      end
+   end)
+   
+   local notifTitle = "Chocola Hub"
+   local notifContent = "WELCOME MEMBER"
+   
+   if isOwner then
+      notifTitle = "👑 Owner Access"
+      notifContent = "WELCOME OWNER 🎉"
+   else
+      pcall(function()
+         local filePath = "ChocolaHub/ChocolaKeySystem.json"
+         if isfile and isfile(filePath) then
+            local data = HttpService:JSONDecode(readfile(filePath))
+            local k = data.Key or data.ChocolaKey or ""
+            if k == "UPDATEYSUFF" then
+               notifContent = "WELCOME MEMBER PREMIUM"
+            elseif k == "VIPBUYHILO" then
+               notifContent = "WELCOME MEMBER VIP"
+            elseif k == "GOODMODE1" then
+               notifContent = "WELCOME MEMBER FREE"
+            else
+               notifContent = "WELCOME MEMBER " .. string.upper(activeKeyType)
+            end
+         end
+      end)
+   end
+   
+   Rayfield:Notify({
+      Title = notifTitle,
+      Content = notifContent,
+      Duration = 5,
+      Image = 4483362458,
+   })
+   
+   task.delay(0.5, showRatingPopup)
+end)
+
+local Tab = Window:CreateTab("Pet Spawner", 4483362458)
+local PlayersTab = Window:CreateTab("Pemain Login", 4483362458)
+local AvatarTab = Window:CreateTab("Avatar Pemain", 4483362458)
+local MapTab = Window:CreateTab("Map Pemain", 4483362458)
+local SettingsTab = Window:CreateTab("Settings & Anti Lag", 4483362458)
+
+Tab:CreateSection("Credit")
+Tab:CreateLabel("@ysuff_store")
+if isOwner then
+   Tab:CreateLabel("👑 Status: Logged in as Owner")
+end
+
+Tab:CreateSection("Main Features")
+
+Tab:CreateButton({
+   Name = "Load Pet Spawner Script",
+   Callback = function()
+      local success# STEAL-AN-EGG-
